@@ -1,1 +1,0 @@
-global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf filter=lfs diff=lfs merge=lfs -text
