@@ -81,7 +81,10 @@ def calc_prob_snp(record,d):
         alt = 0.0
         nb_tot = 0.0
         for j in d[i]:
+            
             gen = (record.genotype(j).data.GT)
+            #print (record.genotype(j).data.DS)
+            #print (record.genotype(j))
             a = gen.split('|')
             #print (a)
             if a[0] != '0':
@@ -91,7 +94,49 @@ def calc_prob_snp(record,d):
             nb_tot +=2
         dico[i] = (alt/nb_tot)
     return dico
+ 
     
+
+def calc_prob_snp_bis(record,d):
+    """Calcule la probabilite de l'allele mutee pour un SNP pour chaque population
+    
+    
+    Parametres
+    ----------
+    record : Record
+    d : dict
+    
+    Retourne
+    --------
+    dico : dict, 
+        {str : float} -> {pays : proba}
+        
+    Commentaire
+    -----------
+    J'ai rajoute une condition pour filtrer les donnees, je recupere juste les 
+    genotypes qui n'ont pas un DS 'entier'
+    
+    """
+    dico = {'France':None,'Cameroon':None,'Winters':None,'Raleigh':None,'Autre':None}
+    
+    for i in d.keys():
+        alt = 0.0
+        nb_tot = 0.0
+        for j in d[i]:
+            if record.genotype(j).data.DS == int(record.genotype(j).data.DS):
+                gen = (record.genotype(j).data.GT)
+                #print (record.genotype(j).data.DS)
+                
+                #print (record.genotype(j))
+                a = gen.split('|')
+                #print (a)
+                if a[0] != '0':
+                    alt+=1
+                if a[1] != '0' : 
+                    alt+=1
+                nb_tot +=2
+        dico[i] = (alt/nb_tot) 
+    return dico
         
 def calc_all_snp(path):
     """Calcule la probabilite de l'allele mutee de tous les SNP pour chaque population
@@ -122,12 +167,16 @@ def calc_all_snp(path):
 
 
 def plot_histo(prob):
-    """Affiche un graph occ en fct de freq
+    """Affiche le spectre de frequence (occ en fct de freq)
     
     Parametres 
     ----------
     prob :list, liste de probabilites
     
+    Retourne 
+    --------
+    dictionary : dict,
+        dictionnaire contenant pour chaque proba le nombre d'occurence
     
     """
     
@@ -156,6 +205,7 @@ def plot_histo(prob):
 
 
 def plot_hist_replier(prob):
+    """Affiche le spectre replie"""
     
     def replier_hist(prob):
         dictionary=(dict((x,prob.count(x)) for x in set(prob)))
@@ -189,21 +239,60 @@ def plot_hist_replier(prob):
     plt.savefig('figure1.pdf')
     plt.show()
     
+    return dico
+
+
+def plot_hist_applati(dico1):
+    """
+    
+    Commentaires
+    ------------
+    c'est pas ça
+    """
+    
+    def applati_hist(dic):
+        j = 1
+        for i in dic.keys() : 
+            dic[i] = dic[i] * (1./j)
+            j +=1
+            
+        return dic
+      
+    dico = applati_hist(dico1)    
+    
+    liste_freq=dico.keys()
+    liste_occ=[dico[k] for k in liste_freq]
+
+    plt.figure()
+    for lol in range(len(liste_freq)):
+        plt.plot( [liste_freq[lol], liste_freq[lol]],[0, liste_occ[lol]]    )
+    
+    plt.title('Spectre de frequence applati')
+    plt.ylabel('Occurences')
+    plt.xlabel('Frequences')
+    plt.legend(loc='upper right')
+    plt.savefig('figure1.pdf')
+    plt.show()
+    
+    return dico
+    
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TEST%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-path = os.path.join(os.getcwd(),'Data','test_40000.vcf')
+#path = os.path.join(os.getcwd(),'Data','test_40000.vcf')
 
-
+path = os.path.join(os.getcwd(),'Data','test.vcf')
 d = (pop(path))
 #plot_histo(prob)
 
 
 
-d2 = calc_all_snp(path)        
+d2 = calc_all_snp(path)   
+     
 d3 = plot_histo(d2['France'])
 
-plot_hist_replier(d2['France'])
+d4 = plot_hist_replier(d2['France'])
 
+#plot_hist_applati(d4)
 
 """
 d4 = plot_histo(d2['Raleigh'])
@@ -232,7 +321,6 @@ print (record.is_deletion)
 print (vcf_reader.samples)
 
 """
-#print (record.QUAL)
 #print (record.FILTER)
 #print (record.INFO)
 #print (record.FORMAT)
@@ -241,10 +329,3 @@ print (vcf_reader.samples)
 #print (record.ID)
 
 
-#print (record.QUAL)
-#print (record.FILTER)
-#print (record.INFO)
-#print (record.FORMAT)
-#print (record.samples)
-#print (record.genotype)
-#print (record.ID)
