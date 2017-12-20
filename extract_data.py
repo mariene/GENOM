@@ -18,10 +18,11 @@ vcf_reader = vcf.Reader(open(path,'r'))
 for record in vcf_reader :
     #print (record.samples)
     #print ((record.samples)[0].sample)
-    print (record)
+    #print (record)
     if len(record.ALT)>1 :
          for i in vcf_reader.samples :
              print (record.genotype(i))
+             #print(record.genotype(i).data.GT)
 
 print (len(vcf_reader.samples))
 """
