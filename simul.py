@@ -9,7 +9,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 import os
 
 
-def launch_simul(n,theta,rep, filename = "out.txt") : 
+def launch_simul(n,theta,rep) : 
     """Permet de lancer le logiciel SimulTrees
     
     Parametres
@@ -25,7 +25,11 @@ def launch_simul(n,theta,rep, filename = "out.txt") :
     
     """
     
-    s = "./SimulTrees/SiteFrequencySpectrum "+str(n)+" "+str(theta)+" "+ str(rep) +" > out.txt"
+    
+    for i in ['-e','-l']:
+        for j in n np.arange(0, 1.0, 0.1).tolist() : 
+            filename = "out"+"_"+str(i)+"_"+str(j)+".txt"
+            s = "./SimulTrees/SiteFrequencySpectrum "+str(n)+" "+str(theta)+" "+ str(rep) +i+" "+"" > out.txt"
     #print (s)
     os.system(s)
     

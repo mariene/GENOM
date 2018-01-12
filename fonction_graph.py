@@ -79,7 +79,7 @@ def plot_hist_replier(dico):
 
 if __name__ == "__main__":
     
-    dico=read_list('/users/Etu4/3600744/M2/GENOM/hist.txt')
+    dico=read_list('hist.txt')
 
     liste_freq= sorted(dico.keys()) 
     liste_occ=[dico[k] for k in liste_freq]

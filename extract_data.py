@@ -187,9 +187,11 @@ def plot_histo(prob):
     #plt.bar(list(dictionary.keys()),list(dictionary.values()), color='c')
     
     plt.figure()
+    """
     for l in range(len(list(dictionary.keys()))):
         plt.plot( [list(dictionary.keys())[l], list(dictionary.keys())[l]],[0, list(dictionary.values())[l]], color = 'c'  )
-    
+    """
+    plt.hist(list(dictionary.values()),bins =100)# len(dictionary.keys()))
     
     plt.title('Spectre de freq')
     plt.xlabel('freq')
@@ -224,12 +226,14 @@ def plot_hist_replier(prob):
         return dico
       
     dico = replier_hist(prob)    
-    
-    liste_freq=dico.keys()
-    liste_occ=[dico[k] for k in liste_freq]
+
+    liste_freq= list(dico.keys())
+
+    liste_occ=list(dico.values())
 
     plt.figure()
     for lol in range(len(liste_freq)):
+
         plt.plot( [liste_freq[lol], liste_freq[lol]],[0, liste_occ[lol]]    )
     
     plt.title('Spectre de frequence replie')
@@ -275,7 +279,17 @@ def plot_hist_applati(dico1):
     plt.show()
     
     return dico
+
+
+def premiere_occ(prob):
+    dictionary=(dict((x,prob.count(x)) for x in set(prob)))
+    return list(dictionary.values())[0]
     
+
+def nb_ech (d,nom):
+    return (len(d[nom]))
+
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TEST%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #path = os.path.join(os.getcwd(),'Data','test_40000.vcf')
