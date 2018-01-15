@@ -204,26 +204,26 @@ def plot_histo(prob):
 
 
 
-
+def replier_hist(prob):
+    dictionary=(dict((x,prob.count(x)) for x in set(prob)))
+    liste_freq = list(dictionary.keys())
+    liste_occ = list(dictionary.values())
+    dico={}
+    
+    for x in range(len(liste_freq)) :
+        if liste_freq[x] <= 0.5:
+            dico[liste_freq[x]]=(liste_occ[x])
+        if liste_freq[x] > 0.5:
+            if 1-liste_freq[x] in dico.keys():
+                dico[1-liste_freq[x]]+=(liste_occ[x])
+            else:
+                dico[1-liste_freq[x]]=(liste_occ[x])
+    return dico
 
 def plot_hist_replier(prob):
     """Affiche le spectre replie"""
     
-    def replier_hist(prob):
-        dictionary=(dict((x,prob.count(x)) for x in set(prob)))
-        liste_freq = list(dictionary.keys())
-        liste_occ = list(dictionary.values())
-        dico={}
-        
-        for x in range(len(liste_freq)) :
-            if liste_freq[x] <= 0.5:
-                dico[liste_freq[x]]=(liste_occ[x])
-            if liste_freq[x] > 0.5:
-                if 1-liste_freq[x] in dico.keys():
-                    dico[1-liste_freq[x]]+=(liste_occ[x])
-                else:
-                    dico[1-liste_freq[x]]=(liste_occ[x])
-        return dico
+
       
     dico = replier_hist(prob)    
 
@@ -280,6 +280,10 @@ def plot_hist_applati(dico1):
     
     return dico
 
+def data(prob):
+    dictionary=(dict((x,prob.count(x)) for x in set(prob)))
+    return dictionary
+
 
 def premiere_occ(prob):
     dictionary=(dict((x,prob.count(x)) for x in set(prob)))
@@ -303,8 +307,12 @@ d = (pop(path))
 d2 = calc_all_snp(path)   
      
 d3 = plot_histo(d2['France'])
+d3_replie = replier_hist(d2['France'])
 
 d4 = plot_hist_replier(d2['France'])
+don = data(d2['France'])
+
+
 
 #plot_hist_applati(d4)
 
