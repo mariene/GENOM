@@ -83,10 +83,7 @@ def calc_prob_snp(record,d):
         for j in d[i]:
             
             gen = (record.genotype(j).data.GT)
-            #print (record.genotype(j).data.DS)
-            #print (record.genotype(j))
             a = gen.split('|')
-            #print (a)
             if a[0] != '0':
                 alt+=1
             if a[1] != '0' : 
@@ -95,7 +92,64 @@ def calc_prob_snp(record,d):
         dico[i] = (alt/nb_tot)
     return dico
  
+def comptage_frequence(fichier_vcf):
     
+    vcf_reader = vcf.Reader(open(path,'r'))
+    d = (pop(vcf_reader))
+    
+    
+    dico_freq={}
+    for i in d.iterkeys(): ## pour chaque population
+        dico_freq[i]=[]
+            
+    for record in vcf_reader :   ## pour chaque position
+        
+        for i in d.iterkeys(): ## pour chaque population
+            
+            alt1=0. ## Allele 1
+            alt2=0. ## Allele 2
+            alt3=0. ## alele 0
+            nb_tot = 0.0
+            for j in d[i]: ## pour chaque individu
+                gen = record.genotype(j)['GT']
+                a = gen.split('|')
+                a= [float(ai) for ai in a]
+                if a[0]==1:
+                    alt1+=1
+                if a[1]==1:
+                    alt1+=1
+                if a[0]==2:
+                    alt2+=1
+                if a[1]==2:
+                    alt2+=1
+                if a[0]==0:
+                    alt3+=1
+                if a[1]==0:
+                    alt3+=1
+            #print (len(d[i])*2)==alt1+alt2+alt3
+            if alt1/(len(d[i])*2)!=1 and alt1/(len(d[i])*2)!=0:
+                dico_freq[i].append(alt1/(len(d[i])*2))
+            if alt2/(len(d[i])*2)!=1 and alt2/(len(d[i])*2)!=0:
+                dico_freq[i].append(alt2/(len(d[i])*2))
+
+    return dico_freq    
+
+
+def estimation_theta( dico_proba, pop_size):
+    """
+    moyenne des estimations de theta tout tout i in pop_size
+    """
+    
+    theta=0.0
+    i=0.0
+    for freq,occ in dico_proba.iteritems():
+        theta+=freq*occ*pop_size
+#    for g in dico_proba.keys() :
+#        theta+= g*pop_size * dico_proba[g]
+        i+=1
+    theta =theta / i
+    return theta
+
 
 def calc_prob_snp_bis(record,d):
     """Calcule la probabilite de l'allele mutee pour un SNP pour chaque population
@@ -180,12 +234,7 @@ def plot_histo(prob):
     
     """
     
-    dictionary=(dict((x,prob.count(x)) for x in set(prob)))
-    
-    #print (list(dictionary.keys()))
-    #print (list(dictionary.values()))
-    #plt.bar(list(dictionary.keys()),list(dictionary.values()), color='c')
-    
+    dictionary=(dict((x,prob.count(x)) for x in set(prob))) 
     plt.figure()
     """
     for l in range(len(list(dictionary.keys()))):
@@ -220,11 +269,9 @@ def replier_hist(prob):
                 dico[1-liste_freq[x]]=(liste_occ[x])
     return dico
 
+
 def plot_hist_replier(prob):
     """Affiche le spectre replie"""
-    
-
-      
     dico = replier_hist(prob)    
 
     liste_freq= list(dico.keys())
@@ -234,7 +281,7 @@ def plot_hist_replier(prob):
     plt.figure()
     for lol in range(len(liste_freq)):
 
-        plt.plot( [liste_freq[lol], liste_freq[lol]],[0, liste_occ[lol]]    )
+        plt.plot( [liste_freq[lol], liste_freq[lol]],[0, liste_occ[lol]])
     
     plt.title('Spectre de frequence replie')
     plt.ylabel('Occurences')
