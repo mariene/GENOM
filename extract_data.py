@@ -28,8 +28,8 @@ def pop(path_vcf):
         {str : list(str)} -> {pays : [echantillons]}
     
     """
-    vcf_reader = vcf.Reader(open(path_vcf,'r'))
     
+    vcf_reader = vcf.Reader(open(path_vcf,'r'))
     
     dico = {'France':[],'Cameroon':[],'Winters':[],'Raleigh':[],'Autre':[]}
     
@@ -93,45 +93,46 @@ def calc_prob_snp(record,d):
     return dico
  
 def comptage_frequence(fichier_vcf):
+    """
+    
+    
+    """
+    
+    def initDico(liste):
+        dico = dict()
+        for i in range (0,len(liste)+1) : 
+            dico[str(i)] = 0.0
+        return dico
     
     vcf_reader = vcf.Reader(open(path,'r'))
-    d = (pop(vcf_reader))
+    d = (pop(path))
     
     
     dico_freq={}
-    for i in d.iterkeys(): ## pour chaque population
+    for i in d.keys(): ## pour chaque population
         dico_freq[i]=[]
             
     for record in vcf_reader :   ## pour chaque position
-        
-        for i in d.iterkeys(): ## pour chaque population
-            
-            alt1=0. ## Allele 1
-            alt2=0. ## Allele 2
-            alt3=0. ## alele 0
-            nb_tot = 0.0
+        liste_alt = list(record.ALT)
+        #print (liste_alt)
+        for i in d.keys(): ## pour chaque population
+            dico = initDico(liste_alt)
+
             for j in d[i]: ## pour chaque individu
                 gen = record.genotype(j)['GT']
                 a = gen.split('|')
-                a= [float(ai) for ai in a]
-                if a[0]==1:
-                    alt1+=1
-                if a[1]==1:
-                    alt1+=1
-                if a[0]==2:
-                    alt2+=1
-                if a[1]==2:
-                    alt2+=1
-                if a[0]==0:
-                    alt3+=1
-                if a[1]==0:
-                    alt3+=1
+                
+                dico[a[0]] += 1 
+                dico[a[1]]+=1
+            #print(dico)
+            
             #print (len(d[i])*2)==alt1+alt2+alt3
-            if alt1/(len(d[i])*2)!=1 and alt1/(len(d[i])*2)!=0:
-                dico_freq[i].append(alt1/(len(d[i])*2))
-            if alt2/(len(d[i])*2)!=1 and alt2/(len(d[i])*2)!=0:
-                dico_freq[i].append(alt2/(len(d[i])*2))
-
+            
+            for k in dico.keys():
+                if k != '0':
+                    if dico[k]/(len(d[i])*2)!=1 and dico[k]/(len(d[i])*2)!=0:
+                        dico_freq[i].append(dico[k]/(len(d[i])*2))
+            
     return dico_freq    
 
 
@@ -346,11 +347,11 @@ def nb_ech (d,nom):
 #path = os.path.join(os.getcwd(),'Data','test_40000.vcf')
 
 path = os.path.join(os.getcwd(),'Data','test.vcf')
-d = (pop(path))
+d = pop(path) 
 #plot_histo(prob)
 
 
-
+#print (comptage_frequence(path))
 d2 = calc_all_snp(path)   
      
 d3 = plot_histo(d2['France'])
