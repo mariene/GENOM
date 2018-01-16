@@ -365,12 +365,12 @@ def conv(m):
     
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TEST%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-path = '/media/3202002/PINGOUIN/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf'
+#path = '/media/3202002/PINGOUIN/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf'
 
-#path = os.path.join(os.getcwd(),'Data','test.vcf')
+path = os.path.join(os.getcwd(),'Data','test.vcf')
 #d = pop(path) 
 #plot_histo(prob)
-#cpt_freq = comptage_frequence(path)
+cpt_freq = comptage_frequence(path)
 
 #print (comptage_frequence(path))
 #d2 = calc_all_snp(path)   
