@@ -211,17 +211,17 @@ def meilleur_scena(data,all_freq):
 #mini = d_repli [min(d_repli.keys())]
 
 #fichier = launch_simul(100,mini,1000)
-
-#fichier = (launch_simul_bis (100,242273.1884057971,1000))
-#d_all =all_file_freq(fichier)
+"""
+fichier = (launch_simul_bis (100,242273.1884057971,1000))
+d_all =all_file_freq(fichier)
 #donne = d ['out_l_0.9']
 plt.plot(  [i for i in range (len(donne))],donne,'b*' )
+"""
 
 
 
-
-print (meilleur_scena(list(d3_bis_replie.values()),d_all))
-plt.plot(list(map(lambda x: x*100,list(d3_bis_replie.keys() ))), list(d3_bis_replie.values()),'c+' )
+#print (meilleur_scena(list(d3_bis_replie.values()),d_all))
+#plt.plot(list(map(lambda x: x*100,list(d3_bis_replie.keys() ))), list(d3_bis_replie.values()),'c+' )
 #plt.plot(list(d3_replie.keys()), list(d3_replie.values()),'c*' )
 
 

@@ -6,11 +6,12 @@ Created on Wed Dec 06 16:52:32 2017
 """
 from __future__ import print_function
 
+import json
 import vcf
-import os
+import os, os.path
 import matplotlib.pyplot as plt
 import decimal
-
+import numpy as np
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -94,7 +95,7 @@ def calc_prob_snp(record,d):
  
 def comptage_frequence(fichier_vcf):
     """
-    
+    Permet d'avoir les frequences 
     
     """
     
@@ -237,10 +238,6 @@ def plot_histo(prob):
     
     dictionary=(dict((x,prob.count(x)) for x in set(prob))) 
     plt.figure()
-    """
-    for l in range(len(list(dictionary.keys()))):
-        plt.plot( [list(dictionary.keys())[l], list(dictionary.keys())[l]],[0, list(dictionary.values())[l]], color = 'c'  )
-    """
     plt.hist(list(dictionary.values()),bins =100)# len(dictionary.keys()))
     
     plt.title('Spectre de freq')
@@ -252,7 +249,17 @@ def plot_histo(prob):
     
     return dictionary
 
-
+def plot_hist_bis(prob,name="fig"):
+    dico=(dict((x,prob.count(x)) for x in set(prob))) 
+    plt.figure()
+    for k,v in dico.items():
+        #print(k, "->", len(v))
+        plt.plot([k,k],[0,v], color = 'c')  
+    plt.title('Spectre de freq')
+    plt.xlabel('freq')
+    plt.ylabel('occ')
+    plt.savefig(str(name)+'.png')
+    plt.show()
 
 def replier_hist(prob):
     decimal.getcontext().prec = 1 
@@ -366,12 +373,21 @@ def conv(m):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TEST%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #path = '/media/3202002/PINGOUIN/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf'
-
-path = os.path.join(os.getcwd(),'Data','test.vcf')
+#path = '/media/lahkim/PINGOUIN/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf'
+#path = os.path.join(os.getcwd(),'Data','test.vcf')
 #d = pop(path) 
-#plot_histo(prob)
-cpt_freq = comptage_frequence(path)
-
+"""
+if os.path.isfile("result.json"):
+    with open('result.json', 'r') as fp:
+        cpt_freq = json.load(fp)
+    print("Loaded result.json")
+else:
+    print("Computing result.json")
+    cpt_freq = comptage_frequence(path)
+    with open('result.json', 'w') as fp:
+        json.dump(cpt_freq, fp)
+    print("Saved result.json")
+"""
 #print (comptage_frequence(path))
 #d2 = calc_all_snp(path)   
      
@@ -380,20 +396,22 @@ cpt_freq = comptage_frequence(path)
 
 #d4 = plot_hist_replier(d2['France'])
 #don = data(d2['France'])
+#print (cpt_freq)
 
-
-
+#occ_autre = data(cpt_freq['Autre'])
+#plot_hist_bis(cpt_freq['Autre'])
 #plot_hist_applati(d4)
+#print (occ_autre[min(occ_autre.keys())])
+#print (replier_hist(cpt_freq['Winters']))
 
-"""
-d4 = plot_histo(d2['Raleigh'])
-d5 = plot_histo(d2['Cameroon'])
-d6 = plot_histo(d2['Autre'])
-d7 = plot_histo(d2['Winters'])
+#d4 = plot_histo(d2['Raleigh'])
+#d5 = plot_histo(d2['Cameroon'])
+#d6 = plot_histo(d2['Autre'])
+#d7 = plot_histo(d2['Winters'])
 """
 d3_replie = replier_hist(cpt_freq['Winters'])
 d3_bis_replie = conv(d3_replie)
-"""
+
 for population in d.keys():
 #population='Autre'
     if population !='Cameroon':
