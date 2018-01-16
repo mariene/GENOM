@@ -37,6 +37,7 @@ def launch_simul(n,theta,rep) :
         
     for i in ['-e','-l']:
         for j in np.arange(-1.0, 1.0, 0.1).tolist() : 
+            print (j)
             filename = os.path.join(path,"out"+"_"+str(i[1])+"_"+str(round(j,1))+".txt")
             
             s = "./SimulTrees/SiteFrequencySpectrum "+str(n)+" "+str(theta)+" "+ str(rep) +" "+i+" "+str(j)+" -F " +"> "+filename
@@ -95,7 +96,7 @@ def launch_simul_bis (n,theta,rep,pro=4):
             os.mkdir(path)
         dico = dict()
         for i in ['-e','-l']:
-            for j in np.arange(0, 1.0, 0.1).tolist() : 
+            for j in np.arange(-1, 1.0, 0.1).tolist() : 
                 filename = os.path.join(path,"out"+"_"+str(i[1])+"_"+str(round(j,1))+".txt")
             
                 s = "./SimulTrees/SiteFrequencySpectrum "+str(n)+" "+str(theta)+" "+ str(rep) +" "+i+" "+str(j)+" -F" +"> "+filename
@@ -149,11 +150,12 @@ def recup_freq(fichier = "out.txt") :
 
 def calc(data,dico):
     def calcul (sfs_obs, sfs_th):
+        #print (sfs_obs, sfs_th)
         return(pow((sfs_obs - sfs_th),2) /  sfs_th)
     
     somme = 0.0
     for i in range (len(data)):
-        somme += calcul (dico[i], data[i])
+        somme += calcul (data[i], dico[i])
     
     return somme
     
@@ -166,15 +168,25 @@ def meilleur_scena(data,all_freq):
     save_l = None
     
     for i in all_freq.keys() : 
+        
         if i.split('_')[1] == 'l' :
             tmp_n = calc(data,all_freq[i])
+            print (tmp_n)
             if tmp_n < n :
                 save_l = i
+                n = tmp_n
             
-        if i.split('_')[1] == 'e' :
+        elif i.split('_')[1] == 'e' :
             tmp_m = calc(data,all_freq[i])
+            print (tmp_m)
             if tmp_m < m :
                 save_e = i
+                m = tmp_m
+    print (n,m)
+    if (n<m) : 
+        print ("lineaire")
+    if (n>m) : 
+        print("expo")
     
     return save_e,save_l
     
@@ -193,21 +205,24 @@ def meilleur_scena(data,all_freq):
     
 #recup_freq()
 #launch_simul('20','2','4')
-d_repli = {0.35: 36, 0.5: 12, 0.44999999999999996: 6, 0.25: 34, 0.175: 56, 0.325: 19, 0.375: 13, 0.025: 106, 0.425: 21, 0.05: 73, 0.19999999999999996: 4, 0.42500000000000004: 3, 0.275: 26, 0.15000000000000002: 2, 0.125: 22, 0.30000000000000004: 4, 0.22499999999999998: 2, 0.0: 237, 0.225: 55, 0.09999999999999998: 1, 0.475: 21, 0.07499999999999996: 3, 0.17500000000000004: 8, 0.15: 31, 0.1: 24, 0.4: 23, 0.32499999999999996: 4, 0.3: 29, 0.075: 32, 0.2: 51, 0.45: 21}
+#d_repli = {0.35: 36, 0.5: 12, 0.44999999999999996: 6, 0.25: 34, 0.175: 56, 0.325: 19, 0.375: 13, 0.025: 106, 0.425: 21, 0.05: 73, 0.19999999999999996: 4, 0.42500000000000004: 3, 0.275: 26, 0.15000000000000002: 2, 0.125: 22, 0.30000000000000004: 4, 0.22499999999999998: 2, 0.0: 237, 0.225: 55, 0.09999999999999998: 1, 0.475: 21, 0.07499999999999996: 3, 0.17500000000000004: 8, 0.15: 31, 0.1: 24, 0.4: 23, 0.32499999999999996: 4, 0.3: 29, 0.075: 32, 0.2: 51, 0.45: 21}
 
 
-mini = d_repli [min(d_repli.keys())]
+#mini = d_repli [min(d_repli.keys())]
 
 #fichier = launch_simul(100,mini,1000)
 
-fichier = (launch_simul_bis (100,mini,1000))
-d =all_file_freq(fichier)
-donne = d ['out_l_0.9']
+#fichier = (launch_simul_bis (100,242273.1884057971,1000))
+#d_all =all_file_freq(fichier)
+#donne = d ['out_l_0.9']
 plt.plot(  [i for i in range (len(donne))],donne,'b*' )
 
 
-plt.plot(list(map(lambda x: x*100,list(d_repli.keys() ))), list(d_repli.values()),'c*' )
-#plt.plot(list(d_repli.keys()), list(d_repli.values()),'c*' )
+
+
+print (meilleur_scena(list(d3_bis_replie.values()),d_all))
+plt.plot(list(map(lambda x: x*100,list(d3_bis_replie.keys() ))), list(d3_bis_replie.values()),'c+' )
+#plt.plot(list(d3_replie.keys()), list(d3_replie.values()),'c*' )
 
 
 

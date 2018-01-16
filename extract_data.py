@@ -9,7 +9,7 @@ from __future__ import print_function
 import vcf
 import os
 import matplotlib.pyplot as plt
-
+import decimal
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -143,7 +143,7 @@ def estimation_theta( dico_proba, pop_size):
     
     theta=0.0
     i=0.0
-    for freq,occ in dico_proba.iteritems():
+    for freq,occ in dico_proba.items():
         theta+=freq*occ*pop_size
 #    for g in dico_proba.keys() :
 #        theta+= g*pop_size * dico_proba[g]
@@ -255,6 +255,9 @@ def plot_histo(prob):
 
 
 def replier_hist(prob):
+    decimal.getcontext().prec = 1 
+    #a = decimal.Decimal(1)/decimal.Decimal(3)
+    prob = [round(x,2) for x in prob]
     dictionary=(dict((x,prob.count(x)) for x in set(prob)))
     liste_freq = list(dictionary.keys())
     liste_occ = list(dictionary.values())
@@ -342,23 +345,41 @@ def nb_ech (d,nom):
     return (len(d[nom]))
 
 
+def applati_hist(dic, pop_size):
+    dico_app={}
+    for i in dic.keys() :    
+        dico_app[i] = dic[i] * (i*pop_size)     
+    return dico_app
+
+
+def conv(m):
+    dico = dict()
+    for i in np.arange(0.01, 0.51, 0.01).tolist():
+        dico[round(i,2)]=0.0
+    #print (dico)
+    for j in m.keys():
+        tmp = m[j]
+        dico[round(j,2)]+=tmp
+    #print (dico)
+    return dico
+    
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TEST%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#path = os.path.join(os.getcwd(),'Data','test_40000.vcf')
+path = '/media/3202002/PINGOUIN/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf/global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.recode.maf.05.recode.vcf'
 
-path = os.path.join(os.getcwd(),'Data','test.vcf')
-d = pop(path) 
+#path = os.path.join(os.getcwd(),'Data','test.vcf')
+#d = pop(path) 
 #plot_histo(prob)
-
+#cpt_freq = comptage_frequence(path)
 
 #print (comptage_frequence(path))
-d2 = calc_all_snp(path)   
+#d2 = calc_all_snp(path)   
      
-d3 = plot_histo(d2['France'])
-d3_replie = replier_hist(d2['France'])
+#d3 = plot_histo(d2['France'])
+#d3_replie = replier_hist(d2['France'])
 
-d4 = plot_hist_replier(d2['France'])
-don = data(d2['France'])
+#d4 = plot_hist_replier(d2['France'])
+#don = data(d2['France'])
 
 
 
@@ -370,32 +391,33 @@ d5 = plot_histo(d2['Cameroon'])
 d6 = plot_histo(d2['Autre'])
 d7 = plot_histo(d2['Winters'])
 """
-
-
+d3_replie = replier_hist(cpt_freq['Winters'])
+d3_bis_replie = conv(d3_replie)
+"""
+for population in d.keys():
+#population='Autre'
+    if population !='Cameroon':
+        pop_size=len(d[population])*2.
+        
+        
+        freq_1=cpt_freq[population]
+        
+        dictionary=(dict((x,freq_1.count(x)) for x in set(freq_1)))
+        dico_app=applati_hist(dictionary, pop_size)
+    else :
+        pop_size=len(d[population])
+        
+        freq_1=cpt_freq[population]
+        dictionary=(dict((x,freq_1.count(x)) for x in set(freq_1)))
+        dict_tmp = (dict((x,freq_1.count(x)) for x in set(freq_1)))
+        for l in dict_tmp.keys():
+            if l *pop_size != int(l*pop_size):
+                del(dictionary[l])
+        
+    dico_app= applati_hist(dictionary, pop_size)
+    # plot_hist(dictionary, population)
+    # plot_hist(dico_app, str(population)+'_app')
+    print (population + '\t'+ str(estimation_theta( dictionary, pop_size)))
 
 """
-print (len(vcf_reader.samples))    
-
-print (record)
-print (record.CHROM)
-print (record.POS)
-
-print (record.REF)
-print (record.ALT)
-
-print (record.is_snp)
-print (record.is_indel)
-print (record.is_transition)
-print (record.is_deletion)
-
-print (vcf_reader.samples)
-
-"""
-#print (record.FILTER)
-#print (record.INFO)
-#print (record.FORMAT)
-#print (record.samples)
-#print (record.genotype)
-#print (record.ID)
-
 
