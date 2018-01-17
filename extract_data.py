@@ -93,7 +93,7 @@ def calc_prob_snp(record,d):
         dico[i] = (alt/nb_tot)
     return dico
  
-def comptage_frequence(fichier_vcf):
+def comptage_frequence(path):
     """
     Permet d'avoir les frequences 
     

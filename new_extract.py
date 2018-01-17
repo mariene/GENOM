@@ -6,7 +6,7 @@ Created on Sat Jan 13 17:39:16 2018
 @author: maureen
 """
 
-
+import json
 import vcf
 import os
 import matplotlib.pyplot as plt
@@ -131,13 +131,15 @@ def plot_hist(dico,name):
     
     
     
-path = os.path.join(os.getcwd(),'Data','test.vcf')
+#path = os.path.join(os.getcwd(),'Data','test.vcf')
 #path = os.path.join(os.getcwd(),'Data','global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf')
 
 vcf_reader = vcf.Reader(open(path,'r'))
 d = (pop(vcf_reader))
-frequence=comptage_frequence(path)
+#frequence=comptage_frequence(path)
 
+with open('result.json', 'r') as fp:
+    cpt_freq = json.load(fp)
 
 #with open('dico_frequence','w') as filepickle:
 #     pickle.dump(frequence,filepickle)

@@ -37,7 +37,7 @@ def launch_simul(n,theta,rep) :
         
     for i in ['-e','-l']:
         for j in np.arange(-1.0, 1.0, 0.1).tolist() : 
-            print (j)
+            #print (j)
             filename = os.path.join(path,"out"+"_"+str(i[1])+"_"+str(round(j,1))+".txt")
             
             s = "./SimulTrees/SiteFrequencySpectrum "+str(n)+" "+str(theta)+" "+ str(rep) +" "+i+" "+str(j)+" -F " +"> "+filename
@@ -171,18 +171,18 @@ def meilleur_scena(data,all_freq):
         
         if i.split('_')[1] == 'l' :
             tmp_n = calc(data,all_freq[i])
-            print (tmp_n)
+            #print (tmp_n)
             if tmp_n < n :
                 save_l = i
                 n = tmp_n
             
         elif i.split('_')[1] == 'e' :
             tmp_m = calc(data,all_freq[i])
-            print (tmp_m)
+            #print (tmp_m)
             if tmp_m < m :
                 save_e = i
                 m = tmp_m
-    print (n,m)
+    #print (n,m)
     if (n<m) : 
         print ("lineaire")
     if (n>m) : 
